@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #3b82f6;
+  --color-background-light: #f8fafc;
+  --color-background-dark: #0f172a;
+  --font-display: "Inter", sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --radius: 0.75rem;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  margin: 0;
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #3b82f6 5%, #1e40af 100%);
+}

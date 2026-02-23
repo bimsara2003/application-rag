@@ -19,3 +19,13 @@ body {
 .hero-gradient {
   background: linear-gradient(135deg, #3b82f6 5%, #1e40af 100%);
 }
+
+.glass-bg {
+  background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBndE9aIngsHwJCzGsqU8sfI8Hkuynf7EuOR0g7PX66nTmwIgbd1ut3piBUnGB9DxENJ50sPMlZ6liOFOFDV093c0W9Gs0k23PXtM-Uy3bIv4Khr-0GdU5zMLnt8MyjqLJycdhYMUe9nhPAUQNa0eYzfkgUrqy-nt_JaxSazg9G3omh2MyoBmLAbZGz_tbamH2EJ-RxThKGiBGoBO8Maww_zEpBl5fBUZtQhcyaodE-xVufqOZryJ2YxotA89e-mnDvIeqbdnV4iXfq);
+  background-size: cover;
+  background-position: center;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}

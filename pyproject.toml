@@ -5,7 +5,7 @@ description = "RAG-based support assistant for SLIIT powered by LangChain and Fa
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "fastapi",
+    "fastapi[standard]",
     "uvicorn",
     "python-dotenv",
     "langchain-core",
@@ -13,9 +13,12 @@ dependencies = [
     "langchain-huggingface",
     "langchain-openai",
     "sentence-transformers",
-    "beautifulsoup4",
-    "playwright",
-    "qdrant-client",
+    "langchain-text-splitters",
+    "langchain-chroma",
+    "supabase>=2.28.0",
+    "pydantic[email]",
+    "passlib[bcrypt]",
+    "python-jose[cryptography]",
 ]
 
 [tool.setuptools.packages.find]

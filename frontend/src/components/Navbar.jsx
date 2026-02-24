@@ -5,16 +5,15 @@ export default function Navbar() {
         <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
-                    <div className="flex items-center space-x-4">
-                        <Link to="/" className="flex items-center">
-                            <span className="text-2xl font-bold tracking-tight text-primary">
-                                SLIIT
-                            </span>
-                            <div className="h-6 w-px bg-slate-300 dark:bg-slate-700 mx-4"></div>
-                            <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                                Support Desk
-                            </span>
-                        </Link>
+                    <div className="flex items-center gap-4">
+                     <Link to="/" className="flex items-center gap-2">
+                            <div className="bg-primary p-1.5 rounded-lg">
+                                <span className="material-symbols-outlined text-white">school</span>
+                            </div>
+                        <span className="font-bold text-slate-900 dark:text-white hidden sm:inline">
+                            SLIIT Support Desk
+                        </span>
+                     </Link>
                     </div>
                     <div className="flex items-center space-x-6">
                         <Link

@@ -6,6 +6,16 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ThemeToggle from "./components/ThemeToggle";
+import AdminRoute from "./components/AdminRoute";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminTicketDetail from "./pages/admin/AdminTicketDetail";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminKnowledgeBase from "./pages/admin/AdminKnowledgeBase";
+import StudentTicketDetail from "./pages/StudentTicketDetail";
+import StudentProfile from "./pages/StudentProfile";
+import KnowledgeBase from "./pages/KnowledgeBase";
+import FloatingChat from "./components/FloatingChat";
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -26,11 +36,76 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/student-support" element={<StudentSupport />} />
+
+      {/* Student Protected Routes */}
       <Route
         path="/dashboard"
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ticket/:id"
+        element={
+          <ProtectedRoute>
+            <StudentTicketDetail />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin Protected Routes */}
+      <Route path="/admin-login" element={<AdminLogin />} />
+      <Route
+        path="/admin/dashboard"
+        element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/ticket/:id"
+        element={
+          <AdminRoute>
+            <AdminTicketDetail />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <AdminRoute>
+            <AdminUsers />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/knowledge-base"
+        element={
+          <AdminRoute>
+            <AdminKnowledgeBase />
+          </AdminRoute>
+        }
+      />
+
+      {/* Student Knowledge Base */}
+      <Route
+        path="/knowledge-base"
+        element={
+          <ProtectedRoute>
+            <KnowledgeBase />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Student Profile */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <StudentProfile />
           </ProtectedRoute>
         }
       />
@@ -44,6 +119,7 @@ function App() {
       <AuthProvider>
         <AppRoutes />
         <ThemeToggle />
+        <FloatingChat />
       </AuthProvider>
     </BrowserRouter>
   );

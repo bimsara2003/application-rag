@@ -1,14 +1,20 @@
-"""
-Supabase client initialisation.
-"""
+
+"""Supabase client initialisation."""
+
+import os
 from supabase import create_client, Client
-from app.config import SUPABASE_URL, SUPABASE_KEY
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
+SUPABASE_KEY: str = os.getenv("SUPABASE_KEY", "")
 
 _client: Client | None = None
 
 
 def get_supabase() -> Client:
-    """Return a singleton Supabase client."""
+    """Return a Supabase client."""
     global _client
     if _client is None:
         if not SUPABASE_URL or not SUPABASE_KEY:

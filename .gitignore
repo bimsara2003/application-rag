@@ -24,6 +24,8 @@ node_modules
 dist-ssr
 *.local
 
+database/migrations/*.sql
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

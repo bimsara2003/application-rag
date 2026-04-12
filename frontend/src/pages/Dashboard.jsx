@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ticketApi } from "../services/api";
 import Navbar from "../components/Navbar";
+import AnnouncementBanner from "../components/AnnouncementBanner";
 
 const statusColors = {
     open: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
@@ -60,6 +61,9 @@ export default function Dashboard() {
             <Navbar />
 
             <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+                {/* Announcements */}
+                <AnnouncementBanner />
+
                 {/* Welcome header */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>

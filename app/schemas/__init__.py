@@ -4,3 +4,4 @@ from .ticket import Department, TicketStatus, TicketPriority, CreateTicketReques
 from .knowledge import CategoryResponse, CreateCategoryRequest, UpdateCategoryRequest, ArticleResponse, CreateArticleRequest, UpdateArticleRequest
 from .chat import ChatRole, ChatFeedback, ChatSessionResponse, ChatMessageResponse, CreateMessageRequest
 from .notification import NotificationType, NotificationResponse
+from .announcement import AnnouncementPriority, CreateAnnouncementRequest, UpdateAnnouncementRequest, AnnouncementResponse

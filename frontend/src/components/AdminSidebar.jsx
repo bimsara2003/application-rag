@@ -5,6 +5,7 @@ const navItems = [
     { to: "/admin/dashboard", icon: "dashboard", label: "Dashboard" },
     { to: "#", icon: "confirmation_number", label: "All Tickets" },
     { to: "/admin/knowledge-base", icon: "menu_book", label: "Knowledge Base" },
+    { to: "/admin/announcements", icon: "campaign", label: "Announcements" },
     { to: "/admin/users", icon: "group", label: "Users" },
 ];
 

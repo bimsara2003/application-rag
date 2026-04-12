@@ -267,8 +267,16 @@ export default function AdminUsers() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Department *</label>
-                                    <input required value={form.department} onChange={e => setForm(p => ({ ...p, department: e.target.value }))}
-                                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary" />
+                                    <select required value={form.department} onChange={e => setForm(p => ({ ...p, department: e.target.value }))}
+                                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary">
+                                        <option value="" disabled>Select Department</option>
+                                        <option value="academic">Academic</option>
+                                        <option value="financial">Finance</option>
+                                        <option value="technical">Technical</option>
+                                        <option value="administrative">Administrative</option>
+                                        <option value="library">Library</option>
+                                        <option value="other">Other</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Position</label>

@@ -31,7 +31,7 @@ def get_bucket():
     return bucket
 
 
-def upload_file(file_bytes: bytes, original_filename: str, content_type: str) -> dict:
+def upload_file(file_bytes: bytes, original_filename: str, content_type: str, folder: str = "kb-articles") -> dict:
     """Upload a file to S3 and return its URL and metadata."""
     client = _get_client()
     bucket = get_bucket()
@@ -39,7 +39,7 @@ def upload_file(file_bytes: bytes, original_filename: str, content_type: str) ->
 
     # Create a unique key to avoid name collisions
     file_id = str(uuid4())
-    key = f"kb-articles/{file_id}/{original_filename}"
+    key = f"{folder}/{file_id}/{original_filename}"
 
     client.put_object(
         Bucket=bucket,

@@ -47,6 +47,25 @@ def _format_ticket(ticket: dict) -> dict:
             "author_role": author.get("role"),
         })
 
+    # ── Extract AI routing metadata from admin_note ──────────────
+    ticket["ai_routed"] = False
+    ticket["ai_priority_reason"] = None
+    ticket["ai_assigned_to_name"] = None
+    ticket["student_selected_department"] = None
+
+    if ticket.get("admin_note"):
+        try:
+            import json
+            ai_meta = json.loads(ticket["admin_note"])
+            if isinstance(ai_meta, dict) and ai_meta.get("ai_routed"):
+                ticket["ai_routed"] = True
+                ticket["ai_priority_reason"] = ai_meta.get("ai_priority_reason")
+                ticket["ai_assigned_to_name"] = ai_meta.get("assigned_to_name")
+                ticket["student_selected_department"] = ai_meta.get("student_selected_department")
+        except (json.JSONDecodeError, TypeError):
+            pass
+    # ─────────────────────────────────────────────────────────────
+
     return ticket
 
 
@@ -76,8 +95,49 @@ def create_ticket(user_id: str, data: CreateTicketRequest) -> dict:
         "updated_at": now,
     }
 
+    # ── AI-Powered Smart Routing ──────────────────────────────────
+    ai_routing = None
+    try:
+        from app.services.ai_routing_service import classify_and_route
+        ai_routing = classify_and_route(data.subject, data.message)
+
+        # Override department and priority with AI classification
+        ticket_row["department"] = ai_routing["ai_department"]
+        ticket_row["priority"] = ai_routing["ai_priority"]
+
+        # Auto-assign to a matching staff member
+        if ai_routing.get("assigned_to"):
+            ticket_row["assigned_to"] = ai_routing["assigned_to"]
+
+        # Store AI metadata in admin_note
+        import json
+        ticket_row["admin_note"] = json.dumps({
+            "ai_routed": True,
+            "ai_department": ai_routing["ai_department"],
+            "ai_priority": ai_routing["ai_priority"],
+            "ai_priority_reason": ai_routing["ai_priority_reason"],
+            "assigned_to_name": ai_routing.get("assigned_to_name"),
+            "student_selected_department": data.department.value,
+        })
+    except Exception as e:
+        print(f"[AI Routing] Classification failed, using manual values: {e}")
+    # ──────────────────────────────────────────────────────────────
+
     result = sb.table("tickets").insert(ticket_row).execute()
-    return get_ticket_by_id(result.data[0]["id"])
+    created_ticket = get_ticket_by_id(result.data[0]["id"])
+
+    # Notify assigned staff if AI auto-assigned
+    if ai_routing and ai_routing.get("assigned_to"):
+        try:
+            notify_ticket_assigned(
+                staff_user_id=ai_routing["assigned_to"],
+                ticket_id=result.data[0]["id"],
+                ticket_subject=data.subject,
+            )
+        except Exception:
+            pass
+
+    return created_ticket
 
 
 def get_user_tickets(user_id: str) -> list[dict]:

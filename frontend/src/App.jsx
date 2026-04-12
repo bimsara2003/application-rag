@@ -12,10 +12,12 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminTicketDetail from "./pages/admin/AdminTicketDetail";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminKnowledgeBase from "./pages/admin/AdminKnowledgeBase";
+import AdminAnnouncements from "./pages/admin/AdminAnnouncements";
 import StudentTicketDetail from "./pages/StudentTicketDetail";
 import StudentProfile from "./pages/StudentProfile";
 import KnowledgeBase from "./pages/KnowledgeBase";
 import FloatingChat from "./components/FloatingChat";
+import { Toaster } from "react-hot-toast";
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth();
@@ -89,6 +91,14 @@ function AppRoutes() {
           </AdminRoute>
         }
       />
+      <Route
+        path="/admin/announcements"
+        element={
+          <AdminRoute>
+            <AdminAnnouncements />
+          </AdminRoute>
+        }
+      />
 
       {/* Student Knowledge Base */}
       <Route
@@ -120,6 +130,7 @@ function App() {
         <AppRoutes />
         <ThemeToggle />
         <FloatingChat />
+        <Toaster position="top-right" />
       </AuthProvider>
     </BrowserRouter>
   );

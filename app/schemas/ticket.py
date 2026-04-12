@@ -56,6 +56,11 @@ class TicketResponse(BaseModel):
     updated_at: datetime
     student: Optional[StudentInfo] = None
     comments: List["CommentResponse"] = []
+    # AI Routing fields
+    ai_routed: bool = False
+    ai_priority_reason: Optional[str] = None
+    ai_assigned_to_name: Optional[str] = None
+    student_selected_department: Optional[str] = None
 
     model_config = {"from_attributes": True}
 

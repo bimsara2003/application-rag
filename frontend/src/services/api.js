@@ -74,6 +74,26 @@ export const authApi = {
 export const userApi = {
     getProfile: () => request("/users/me"),
 
+    uploadAvatar: (file) => {
+        const token = localStorage.getItem("access_token");
+        const formData = new FormData();
+        formData.append("file", file);
+
+        return fetch(`${API_BASE}/users/me/avatar`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            body: formData
+        }).then(async res => {
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ detail: "Request failed" }));
+                throw new Error(err.detail || `HTTP ${res.status}`);
+            }
+            return res.json();
+        });
+    },
+
     updateProfile: (data) =>
         request("/users/me", {
             method: "PUT",
@@ -186,4 +206,18 @@ export const chatApi = {
     listSessions: () => request("/chat/sessions"),
     getMessages: (sessionId) => request(`/chat/sessions/${sessionId}/messages`),
     ingest: () => request("/chat/ingest", { method: "POST" }),
+};
+
+// ── Announcement API ────────────────────────────────────────────
+
+export const announcementApi = {
+    listActive: () => request("/announcements/active"),
+    listAll: () => request("/announcements/"),
+    getById: (id) => request(`/announcements/${id}`),
+    create: (data) =>
+        request("/announcements/", { method: "POST", body: JSON.stringify(data) }),
+    update: (id, data) =>
+        request(`/announcements/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+    delete: (id) =>
+        request(`/announcements/${id}`, { method: "DELETE" }),
 };

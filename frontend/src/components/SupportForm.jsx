@@ -19,6 +19,7 @@ export default function SupportForm() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(null);
+    const [createdTicket, setCreatedTicket] = useState(null);
 
     // Pre-fill data if user is authenticated
     useEffect(() => {
@@ -48,14 +49,13 @@ export default function SupportForm() {
         setLoading(true);
 
         try {
-            // The API only expects subject, message, and department.
-            // Other fields are inferred from the authenticated user context on the backend.
-            await ticketApi.create({
+            const ticket = await ticketApi.create({
                 subject: formData.subject,
                 message: formData.message,
                 department: formData.department
             });
 
+            setCreatedTicket(ticket);
             setSuccess(true);
             // Optionally, reset just the message/subject, keep the profile data
             setFormData(prev => ({ ...prev, subject: "", message: "" }));
@@ -66,23 +66,113 @@ export default function SupportForm() {
         }
     };
 
+    const departmentLabels = {
+        academic: "Examinations & Academics",
+        financial: "Finance & Payments",
+        technical: "Information Technology",
+        administrative: "Student Services & Administration",
+        library: "Library Services",
+        other: "Other Inquiry",
+    };
+
+    const priorityConfig = {
+        low: { label: "Low", color: "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400", icon: "arrow_downward" },
+        medium: { label: "Medium", color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400", icon: "remove" },
+        high: { label: "High", color: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400", icon: "arrow_upward" },
+        urgent: { label: "Urgent", color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400", icon: "priority_high" },
+    };
+
     if (success) {
+        const ticket = createdTicket;
+        const isAiRouted = ticket?.ai_routed;
+        const pCfg = priorityConfig[ticket?.priority] || priorityConfig.medium;
+
         return (
             <main className="relative min-h-screen py-12 px-4 md:px-12 overflow-hidden flex items-center justify-center">
-                <div className="relative z-10 w-full max-w-2xl mx-auto bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-10 text-center">
-                    <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span className="material-symbols-outlined text-4xl">check_circle</span>
+                <div className="relative z-10 w-full max-w-2xl mx-auto bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-10">
+                    {/* Success header */}
+                    <div className="text-center mb-8">
+                        <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <span className="material-symbols-outlined text-4xl">check_circle</span>
+                        </div>
+                        <h2 className="text-2xl font-bold mb-2">Ticket Submitted Successfully!</h2>
+                        <p className="text-slate-500 dark:text-slate-400 text-sm">
+                            Our support team has received your inquiry and will get back to you shortly.
+                        </p>
                     </div>
-                    <h2 className="text-2xl font-bold mb-4">Ticket Submitted Successfully!</h2>
-                    <p className="text-slate-500 dark:text-slate-400 mb-8">
-                        Our support team has received your inquiry and will get back to you shortly. You can track its status in your dashboard.
-                    </p>
-                    <button
-                        onClick={() => window.location.href = '/dashboard'}
-                        className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl text-sm transition-all shadow-lg active:scale-95 cursor-pointer"
-                    >
-                        Go to Dashboard
-                    </button>
+
+                    {/* AI Routing Card */}
+                    {isAiRouted && (
+                        <div className="mb-8 bg-gradient-to-br from-violet-50 to-indigo-50 dark:from-violet-950/30 dark:to-indigo-950/30 rounded-xl border border-violet-200 dark:border-violet-800/40 p-6">
+                            <div className="flex items-center gap-2 mb-4">
+                                <div className="w-8 h-8 bg-violet-100 dark:bg-violet-900/50 rounded-lg flex items-center justify-center">
+                                    <span className="material-symbols-outlined text-violet-600 dark:text-violet-400 text-lg">smart_toy</span>
+                                </div>
+                                <h3 className="font-bold text-violet-900 dark:text-violet-200">AI Smart Routing</h3>
+                                <span className="ml-auto text-xs px-2 py-1 rounded-full bg-violet-200 dark:bg-violet-800 text-violet-700 dark:text-violet-300 font-medium">
+                                    Auto-Classified
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {/* Department */}
+                                <div className="bg-white/60 dark:bg-slate-900/40 rounded-lg p-3">
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Routed to Department</p>
+                                    <div className="flex items-center gap-2">
+                                        <span className="material-symbols-outlined text-indigo-500 text-lg">account_tree</span>
+                                        <span className="font-semibold text-sm text-slate-800 dark:text-slate-200">
+                                            {departmentLabels[ticket.department] || ticket.department}
+                                        </span>
+                                    </div>
+                                    {ticket.student_selected_department && ticket.student_selected_department !== ticket.department && (
+                                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1 flex items-center gap-1">
+                                            <span className="material-symbols-outlined text-xs">info</span>
+                                            Reclassified from {departmentLabels[ticket.student_selected_department] || ticket.student_selected_department}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Priority */}
+                                <div className="bg-white/60 dark:bg-slate-900/40 rounded-lg p-3">
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Priority Level</p>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold ${pCfg.color}`}>
+                                            <span className="material-symbols-outlined text-sm">{pCfg.icon}</span>
+                                            {pCfg.label}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Assigned To */}
+                                {ticket.ai_assigned_to_name && (
+                                    <div className="bg-white/60 dark:bg-slate-900/40 rounded-lg p-3">
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Assigned To</p>
+                                        <div className="flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-emerald-500 text-lg">person</span>
+                                            <span className="font-semibold text-sm text-slate-800 dark:text-slate-200">{ticket.ai_assigned_to_name}</span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* AI Reasoning */}
+                                {ticket.ai_priority_reason && (
+                                    <div className="bg-white/60 dark:bg-slate-900/40 rounded-lg p-3">
+                                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">AI Analysis</p>
+                                        <p className="text-sm text-slate-700 dark:text-slate-300 italic">"{ticket.ai_priority_reason}"</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="text-center">
+                        <button
+                            onClick={() => window.location.href = '/dashboard'}
+                            className="px-8 py-3 bg-primary hover:bg-primary/90 text-white font-semibold rounded-xl text-sm transition-all shadow-lg active:scale-95 cursor-pointer"
+                        >
+                            Go to Dashboard
+                        </button>
+                    </div>
                 </div>
             </main>
         );

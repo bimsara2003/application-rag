@@ -77,6 +77,21 @@ export default function Navbar() {
         setOpen(false);
     };
 
+    const handleCloseNotification = async (e, notif) => {
+        e.stopPropagation(); // Prevent the main button click
+
+        // Optimistically remove from UI
+        setNotifications(prev => prev.filter(n => n.id !== notif.id));
+
+        // If it was unread, mark it as read so the count updates correctly
+        if (!notif.is_read) {
+            try {
+                await notificationApi.markRead(notif.id);
+                setUnreadCount(prev => Math.max(0, prev - 1));
+            } catch { /* silent */ }
+        }
+    };
+
     const getNotifIcon = (type) => {
         switch (type) {
             case "ticket_resolved": return { icon: "check_circle", color: "text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10" };
@@ -185,12 +200,12 @@ export default function Navbar() {
                                                             <button
                                                                 key={notif.id}
                                                                 onClick={() => handleNotificationClick(notif)}
-                                                                className={`w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors ${!notif.is_read ? "bg-primary/5 dark:bg-primary/5" : ""}`}
+                                                                className={`w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors group relative ${!notif.is_read ? "bg-primary/5 dark:bg-primary/5" : ""}`}
                                                             >
                                                                 <div className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${color}`}>
                                                                     <span className="material-symbols-outlined text-[18px]">{icon}</span>
                                                                 </div>
-                                                                <div className="flex-1 min-w-0">
+                                                                <div className="flex-1 min-w-0 pr-6">
                                                                     <div className="flex items-center gap-2">
                                                                         <p className={`text-sm leading-tight truncate ${!notif.is_read ? "font-bold text-slate-900 dark:text-white" : "font-medium text-slate-700 dark:text-slate-300"}`}>
                                                                             {notif.title}
@@ -201,6 +216,13 @@ export default function Navbar() {
                                                                     </div>
                                                                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">{notif.message}</p>
                                                                     <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1">{timeAgo(notif.created_at)}</p>
+                                                                </div>
+                                                                <div
+                                                                    className="absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                                                                    onClick={(e) => handleCloseNotification(e, notif)}
+                                                                    title="Dismiss"
+                                                                >
+                                                                    <span className="material-symbols-outlined text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-[18px] p-1 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">close</span>
                                                                 </div>
                                                             </button>
                                                         );
@@ -216,8 +238,12 @@ export default function Navbar() {
                                     className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
                                     title="My Profile"
                                 >
-                                    <div className="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold text-sm">
-                                        {user?.full_name?.charAt(0).toUpperCase()}
+                                    <div className="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold text-sm overflow-hidden border border-primary/20">
+                                        {user?.profile_picture ? (
+                                            <img src={user?.profile_picture} alt="Profile" className="w-full h-full object-cover" />
+                                        ) : (
+                                            user?.full_name?.charAt(0).toUpperCase()
+                                        )}
                                     </div>
                                     <span className="hidden sm:inline">{user?.full_name?.split(" ")[0]}</span>
                                 </Link>

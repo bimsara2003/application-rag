@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import teacherImage from "../assets/online-teacher-illustration-3-1024x756.jpg";
 
 export default function Login() {
     const { login } = useAuth();
@@ -30,12 +31,14 @@ export default function Login() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
             {/* Left Sidebar */}
-            <div className="relative hidden lg:flex flex-col justify-between p-12 bg-primary overflow-hidden">
-                <div className="absolute inset-0 opacity-20">
-                    <div className="absolute inset-0"
-                        style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}>
-                    </div>
+            <div className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden bg-primary">
+                {/* Custom Image Background */}
+                <div className="absolute inset-0 w-full h-full">
+                    <img src={teacherImage} alt="Support Illustration" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-primary/80 mix-blend-multiply backdrop-blur-[2px]"></div>
+                    <div className="absolute inset-0 bg-linear-to-b from-primary/50 via-transparent to-slate-900/90"></div>
                 </div>
+
                 <div className="relative z-10">
                     <Link to="/" className="flex items-center gap-3 text-white hover:opacity-90 transition-opacity">
                         <span className="material-symbols-outlined text-4xl font-bold">school</span>
@@ -67,7 +70,7 @@ export default function Login() {
                         <div className="bg-primary p-2 rounded-xl">
                             <span className="material-symbols-outlined text-white text-2xl">school</span>
                         </div>
-                        <span className="text-2xl font-bold text-slate-900 dark:text-white">SLIIT Support</span>
+                        <span className="text-2xl font-bold text-slate-900 dark:text-white">Campus Support</span>
                     </Link>
                 </div>
 

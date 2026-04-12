@@ -44,6 +44,33 @@ async def update_my_profile(
     return update_user(current_user["id"], data)
 
 
+from fastapi import UploadFile, File
+
+ALLOWED_AVATAR_TYPES = {"image/png", "image/jpeg", "image/webp"}
+MAX_AVATAR_SIZE = 5 * 1024 * 1024  # 5 MB
+
+@router.post("/me/avatar", response_model=UserResponse)
+async def upload_my_avatar(
+    file: UploadFile = File(...),
+    current_user: dict = Depends(get_current_user),
+):
+    """Upload and set the authenticated user's profile picture."""
+    if file.content_type not in ALLOWED_AVATAR_TYPES:
+        raise HTTPException(status_code=400, detail=f"File type '{file.content_type}' not allowed")
+
+    contents = await file.read()
+    if len(contents) > MAX_AVATAR_SIZE:
+        raise HTTPException(status_code=400, detail="File too large (max 5 MB)")
+
+    from app.services import s3_service
+    # Provide the 'folder' argument to save in 'avatars' directory
+    result = s3_service.upload_file(contents, file.filename, file.content_type, folder="avatars")
+    
+    # Update the user in db
+    update_data = UserUpdateRequest(profile_picture=result["file_url"])
+    return update_user(current_user["id"], update_data)
+
+
 @router.put("/me/password")
 async def change_my_password(
     data: ChangePasswordRequest,

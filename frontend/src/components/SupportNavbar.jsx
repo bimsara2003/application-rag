@@ -12,7 +12,7 @@ export default function SupportNavbar() {
                             <span className="material-symbols-outlined text-white">school</span>
                         </div>
                         <span className="font-bold text-slate-900 dark:text-white hidden sm:inline">
-                            SLIIT Support Desk
+                            Campus Support Desk
                         </span>
                     </Link>
                 </div>
@@ -21,7 +21,7 @@ export default function SupportNavbar() {
                         to="/student-support"
                         className="hidden md:flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-all"
                     >
-                        Contact SLIIT Student Support
+                        Contact Campus Student Support
                     </Link>
                     <div className="flex items-center gap-4 border-l pl-4 border-slate-200 dark:border-slate-700">
                         {isAuthenticated ? (
@@ -29,8 +29,12 @@ export default function SupportNavbar() {
                                 to="/dashboard"
                                 className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
                             >
-                                <div className="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold text-sm uppercase">
-                                    {user?.full_name?.charAt(0) || "U"}
+                                <div className="w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center font-bold text-sm overflow-hidden border border-primary/20 uppercase">
+                                    {user?.profile_picture ? (
+                                        <img src={user?.profile_picture} alt="Profile" className="w-full h-full object-cover" />
+                                    ) : (
+                                        user?.full_name?.charAt(0) || "U"
+                                    )}
                                 </div>
                                 <span className="hidden sm:inline">{user?.full_name?.split(" ")[0] || "User"}</span>
                             </Link>

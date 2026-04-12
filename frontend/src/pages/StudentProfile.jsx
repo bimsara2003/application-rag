@@ -9,8 +9,10 @@ export default function StudentProfile() {
     const navigate = useNavigate();
     const [form, setForm] = useState({ full_name: "", phone: "" });
     const [saving, setSaving] = useState(false);
+    const [avatarUploading, setAvatarUploading] = useState(false);
     const [success, setSuccess] = useState("");
     const [error, setError] = useState("");
+
 
     useEffect(() => {
         if (user) {
@@ -20,6 +22,27 @@ export default function StudentProfile() {
             });
         }
     }, [user]);
+
+    const handleAvatarChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setError("");
+        setSuccess("");
+        setAvatarUploading(true);
+        try {
+            const updated = await userApi.uploadAvatar(file);
+            setUser(updated);
+            setSuccess("Profile picture updated successfully!");
+            setTimeout(() => setSuccess(""), 3000);
+        } catch (err) {
+            setError(err.message || "Failed to upload profile picture");
+        } finally {
+            setAvatarUploading(false);
+            e.target.value = "";
+        }
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,9 +72,18 @@ export default function StudentProfile() {
 
                 {/* Header */}
                 <div className="text-center mb-8">
-                    <div className="h-20 w-20 rounded-full bg-primary flex items-center justify-center text-white text-3xl font-bold mx-auto shadow-lg">
-                        {user.full_name?.charAt(0).toUpperCase() || "S"}
+                    <div className="h-24 w-24 rounded-full bg-primary flex items-center justify-center text-white text-3xl font-bold mx-auto shadow-lg relative group overflow-hidden">
+                        {user.profile_picture ? (
+                            <img src={user.profile_picture} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                            user.full_name?.charAt(0).toUpperCase() || "S"
+                        )}
+                        <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
+                            <span className="material-symbols-outlined text-white text-xl">photo_camera</span>
+                            <input type="file" className="hidden" accept="image/png, image/jpeg, image/webp" onChange={handleAvatarChange} disabled={avatarUploading} />
+                        </label>
                     </div>
+                    {avatarUploading && <p className="text-xs text-primary mt-2 font-medium animate-pulse">Uploading picture...</p>}
                     <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-4">My Profile</h1>
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Update your personal information</p>
                 </div>

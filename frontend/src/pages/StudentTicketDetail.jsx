@@ -158,8 +158,12 @@ export default function StudentTicketDetail() {
 
                         {/* Original message (student's own) */}
                         <div className="flex gap-3">
-                            <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-white font-bold text-xs flex items-center justify-center shrink-0">
-                                {user?.full_name ? user.full_name.charAt(0).toUpperCase() : "Y"}
+                            <div className="h-8 w-8 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-white font-bold text-xs flex items-center justify-center shrink-0">
+                                {user?.profile_picture ? (
+                                    <img src={user.profile_picture} alt="Avatar" className="w-full h-full object-cover" />
+                                ) : (
+                                    user?.full_name ? user.full_name.charAt(0).toUpperCase() : "Y"
+                                )}
                             </div>
                             <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 mb-1">
@@ -216,8 +220,12 @@ export default function StudentTicketDetail() {
                         <div className="border-t border-slate-100 dark:border-slate-800 p-4">
                             <form onSubmit={handlePostComment}>
                                 <div className="flex gap-3">
-                                    <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-white font-bold text-xs flex items-center justify-center shrink-0 mt-1">
-                                        {user?.full_name ? user.full_name.charAt(0).toUpperCase() : "Y"}
+                                    <div className="h-8 w-8 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-white font-bold text-xs flex items-center justify-center shrink-0 mt-1">
+                                        {user?.profile_picture ? (
+                                            <img src={user.profile_picture} alt="Avatar" className="w-full h-full object-cover" />
+                                        ) : (
+                                            user?.full_name ? user.full_name.charAt(0).toUpperCase() : "Y"
+                                        )}
                                     </div>
                                     <div className="flex-1">
                                         <textarea

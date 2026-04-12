@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import signinImage from "../assets/sigin.jpg";
 
 export default function Register() {
     const { register } = useAuth();
@@ -54,22 +55,24 @@ export default function Register() {
     return (
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] min-h-screen bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
             {/* Left Sidebar */}
-            <div className="relative hidden lg:flex flex-col justify-between p-12 bg-primary overflow-hidden">
-                <div className="absolute inset-0 opacity-20">
-                    <div className="absolute inset-0"
-                        style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}>
-                    </div>
+            <div className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden bg-primary">
+                {/* Custom Image Background */}
+                <div className="absolute inset-0 w-full h-full">
+                    <img src={signinImage} alt="Campus" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-primary/80 mix-blend-multiply backdrop-blur-[2px]"></div>
+                    <div className="absolute inset-0 bg-linear-to-b from-primary/50 via-transparent to-slate-900/90"></div>
                 </div>
+
                 <div className="relative z-10">
                     <Link to="/" className="flex items-center gap-3 text-white hover:opacity-90 transition-opacity">
                         <span className="material-symbols-outlined text-4xl font-bold">school</span>
-                        <h1 className="text-2xl font-bold tracking-tight">SLIIT Support</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">Campus Support</h1>
                     </Link>
                 </div>
                 <div className="relative z-10 max-w-md">
                     <h2 className="text-4xl font-extrabold text-white leading-tight mb-6">Empowering Your Academic Journey.</h2>
                     <p className="text-white/80 text-lg leading-relaxed">
-                        Join the SLIIT Support Desk community to get priority assistance, access technical resources, and
+                        Join the Campus Support Desk community to get priority assistance, access technical resources, and
                         resolve academic inquiries seamlessly.
                     </p>
                 </div>
@@ -79,7 +82,7 @@ export default function Register() {
                         <img alt="Student 2" className="h-10 w-10 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARshsTtmGG9wOd0NCFfZiuT6GfA0EeMyo1BomjFv3wlrfzxnffKbFmA75ubVp43ywH7skLXlWpNawdCWkt6uTIZ-estJ5TfMLn9YpLm_YnQa7suSfyv0s5acWLEobxVN6_0UR4CVoQjNu_BgWeKGaWpvkQPdViuU7vNzNqUgOEaibtKtsYVnKVzOIv5JCoahk5f89zBMV1vC0trGopjPGzxfnQL7TKOk1GNwnn6Bb_L_6t9fGV1YH9ShCHyJYsYm4ZDRRc2yBFd04e" />
                         <img alt="Student 3" className="h-10 w-10 rounded-full border-2 border-primary object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7FNSyWA3kA6fy5byT0nV_AuIC1MdLOMbi-nZpXormxrXH6m5K6XlDwOOgSxvz5on-bvzaIfx2el3lNbAyuEPE7INeoBW6Z_DfAedUcTC7ApS7cNNul2a_B2Tvfyp2X8ByuoU4DET0rQ9zYbHoiadVg-XgsaDTCM-E0LOMLoQHljD9zv5whYIjQrTYZQbhbO464yHRmAHlzF4Gmo9PPcUc6LRd0qIdAbNhDX58goQTwPIg5tIMzd5BE8XcpNLqV8z6S5js9TxK5Di_" />
                     </div>
-                    <p className="text-white/70 text-sm font-medium">Joined by 5,000+ students this semester</p>
+                    <p className="text-white/70 text-sm font-medium">Joined by 5,00+ students this semester</p>
                 </div>
             </div>
 
@@ -122,7 +125,7 @@ export default function Register() {
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Student ID</label>
-                                    <input className={inputClass} placeholder="e.g. IT24103190" type="text" value={form.registration_number} onChange={set("registration_number")} required />
+                                    <input className={inputClass} placeholder="Exactly 10 characters" type="text" minLength={10} maxLength={10} value={form.registration_number} onChange={set("registration_number")} required />
                                 </div>
                             </div>
 
@@ -223,7 +226,7 @@ export default function Register() {
                     </div>
 
                     <footer className="mt-12 pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[10px] text-slate-400 font-medium uppercase tracking-widest">
-                        <span>© {new Date().getFullYear()} SLIIT IT Services</span>
+                        <span>© {new Date().getFullYear()} Campus Support Services</span>
                         <div className="flex gap-4">
                             <Link to="/" className="hover:text-primary transition-colors">Help Center</Link>
                         </div>

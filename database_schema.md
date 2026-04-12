@@ -208,6 +208,21 @@ chat_sessions
 
 ---
 
+### 13. announcements
+| Column     | Type        | Constraints                                                                 |
+|------------|-------------|-----------------------------------------------------------------------------|
+| id         | UUID        | PK, default uuid_generate_v4()                                             |
+| title      | TEXT        | NOT NULL                                                                    |
+| content    | TEXT        | NOT NULL                                                                    |
+| priority   | TEXT        | NOT NULL, default 'normal', CHECK (low, normal, high, critical)            |
+| is_active  | BOOLEAN     | NOT NULL, default TRUE                                                      |
+| author_id  | UUID        | FK → users(id), ON DELETE SET NULL                                          |
+| expires_at | TIMESTAMPTZ |                                                                             |
+| created_at | TIMESTAMPTZ | NOT NULL, default NOW()                                                     |
+| updated_at | TIMESTAMPTZ | NOT NULL, default NOW()                                                     |
+
+---
+
 ## Relationships Summary
 
 | # | Relationship                        | Type         | FK Column     | References          | ON DELETE |

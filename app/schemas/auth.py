@@ -9,7 +9,7 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=8, description="Minimum 8 characters")
     full_name: str = Field(..., min_length=2, max_length=100)
-    registration_number: str = Field(..., pattern=r"^[A-Z]{2}\d{8}$", description="e.g. IT24103190")
+    registration_number: str = Field(..., min_length=10, max_length=10, description="Exactly 10 characters")
     faculty: Faculty
     campus: Campus
     phone: Optional[str] = Field(None, pattern=r"^\+?\d{9,15}$", description="e.g. +94771234567 or 0771234567")
